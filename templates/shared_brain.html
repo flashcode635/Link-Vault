@@ -1,12 +1,22 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <div class="max-w-5xl mx-auto w-full px-4 sm:px-6 py-8">
   <!-- Shared Header Banner -->
-  <div class="p-6 bg-[#fbfbfa] border border-[#ecece9] rounded-2xl mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+  <div
+    class="p-6 bg-[#fbfbfa] border border-[#ecece9] rounded-2xl mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+  >
     <div class="flex items-center gap-3.5">
-      <div class="w-12 h-12 rounded-xl bg-[#37352f] text-white flex items-center justify-center shadow-xs">
-        <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <div
+        class="w-12 h-12 rounded-xl bg-[#37352f] text-white flex items-center justify-center shadow-xs"
+      >
+        <svg
+          class="w-6 h-6 text-white"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <rect x="3" y="3" width="18" height="18" rx="3"></rect>
           <circle cx="12" cy="12" r="3"></circle>
           <path d="M12 9v1"></path>
@@ -17,24 +27,40 @@
       </div>
       <div>
         <div class="flex items-center gap-2">
-          <h1 class="text-lg font-bold text-[#18181b] tracking-tight">{{ curator_username }}'s Brain Vault</h1>
-          <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-[#ecfdf5] text-[#065f46] border border-[#a7f3d0]">
+          <h1 class="text-lg font-bold text-[#18181b] tracking-tight">
+            {{ curator_username }}'s Link Vault
+          </h1>
+          <span
+            class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-[#ecfdf5] text-[#065f46] border border-[#a7f3d0]"
+          >
             Public Read-Only
           </span>
         </div>
         <p class="text-xs text-[#787774] mt-0.5">
-          Curated collection of {{ total_items }} resource{{ total_items|pluralize }}.
+          Curated collection of {{ total_items }} resource{{
+          total_items|pluralize }}.
         </p>
       </div>
     </div>
 
     <div>
-      <a href="/" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium bg-[#18181b] text-white hover:bg-black rounded-lg transition-colors shadow-xs">
-        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <a
+        href="/"
+        class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium bg-[#18181b] text-white hover:bg-black rounded-lg transition-colors shadow-xs"
+      >
+        <svg
+          class="w-3.5 h-3.5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <line x1="12" y1="5" x2="12" y2="19"></line>
           <line x1="5" y1="12" x2="19" y2="12"></line>
         </svg>
-        <span>Create Your Own Brain Vault</span>
+        <span>Create Your Own Link Vault</span>
       </a>
     </div>
   </div>
@@ -43,49 +69,69 @@
   {% if items %}
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     {% for item in items %}
-    <div class="bg-white border border-[#ecece9] hover:border-[#d4d4d0] rounded-xl p-4 transition-all flex flex-col justify-between shadow-2xs">
+    <div
+      class="bg-white border border-[#ecece9] hover:border-[#d4d4d0] rounded-xl p-4 transition-all flex flex-col justify-between shadow-2xs"
+    >
       <div>
         <!-- Top row: Type badge & Link icon -->
         <div class="flex items-center justify-between gap-2 mb-2.5">
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium 
-            {% if item.type == 'youtube' %}bg-red-50 text-red-700 border border-red-200
-            {% elif item.type == 'twitter' %}bg-sky-50 text-sky-700 border border-sky-200
-            {% elif item.type == 'article' %}bg-emerald-50 text-emerald-700 border border-emerald-200
-            {% else %}bg-amber-50 text-amber-700 border border-amber-200{% endif %}">
-            <i data-lucide="{% if item.type == 'youtube' %}video{% elif item.type == 'twitter' %}twitter{% elif item.type == 'article' %}file-text{% else %}book-open{% endif %}" class="w-3 h-3"></i>
+          <span
+            class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium {% if item.type == 'youtube' %}bg-red-50 text-red-700 border border-red-200 {% elif item.type == 'twitter' %}bg-sky-50 text-sky-700 border border-sky-200 {% elif item.type == 'article' %}bg-emerald-50 text-emerald-700 border border-emerald-200 {% else %}bg-amber-50 text-amber-700 border border-amber-200{% endif %}"
+          >
+            <i
+              data-lucide="{% if item.type == 'youtube' %}video{% elif item.type == 'twitter' %}twitter{% elif item.type == 'article' %}file-text{% else %}book-open{% endif %}"
+              class="w-3 h-3"
+            ></i>
             <span class="capitalize">{{ item.type }}</span>
           </span>
 
           {% if item.link %}
-          <a href="{{ item.link }}" target="_blank" rel="noopener noreferrer" class="text-[#9b9a97] hover:text-[#37352f] transition-colors p-1" title="Open source">
+          <a
+            href="{{ item.link }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-[#9b9a97] hover:text-[#37352f] transition-colors p-1"
+            title="Open source"
+          >
             <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
           </a>
           {% endif %}
         </div>
 
         <!-- Title -->
-        <h3 class="text-sm font-semibold text-[#37352f] leading-snug line-clamp-2 mb-2">
+        <h3
+          class="text-sm font-semibold text-[#37352f] leading-snug line-clamp-2 mb-2"
+        >
           {% if item.link %}
-          <a href="{{ item.link }}" target="_blank" rel="noopener noreferrer" class="hover:underline decoration-[#37352f]/40">
+          <a
+            href="{{ item.link }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:underline decoration-[#37352f]/40"
+          >
             {{ item.title }}
           </a>
-          {% else %}
-          {{ item.title }}
-          {% endif %}
+          {% else %} {{ item.title }} {% endif %}
         </h3>
 
         <!-- Notes -->
         {% if item.notes %}
-        <p class="text-xs text-[#787774] leading-relaxed line-clamp-3 mb-3 bg-[#fbfbfa] p-2 rounded-lg border border-[#f0f0ee]">
+        <p
+          class="text-xs text-[#787774] leading-relaxed line-clamp-3 mb-3 bg-[#fbfbfa] p-2 rounded-lg border border-[#f0f0ee]"
+        >
           {{ item.notes }}
         </p>
         {% endif %}
       </div>
 
       <!-- Tags & Footer -->
-      <div class="pt-2 border-t border-[#f5f5f4] flex flex-wrap items-center gap-1">
+      <div
+        class="pt-2 border-t border-[#f5f5f4] flex flex-wrap items-center gap-1"
+      >
         {% for tag in item.tags %}
-        <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-[#f0f0ef] text-[#5a5855]">
+        <span
+          class="px-2 py-0.5 rounded text-[10px] font-mono bg-[#f0f0ef] text-[#5a5855]"
+        >
           #{{ tag }}
         </span>
         {% endfor %}
@@ -94,38 +140,91 @@
     {% endfor %}
   </div>
   {% else %}
-  <div class="py-16 text-center border border-dashed border-[#ecece9] rounded-2xl bg-[#fafafa]">
-    <div class="w-12 h-12 rounded-xl bg-[#f7f6f3] border border-[#ecece9] flex items-center justify-center mx-auto mb-2 text-[#9b9a97]">
-      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <div
+    class="py-16 text-center border border-dashed border-[#ecece9] rounded-2xl bg-[#fafafa]"
+  >
+    <div
+      class="w-12 h-12 rounded-xl bg-[#f7f6f3] border border-[#ecece9] flex items-center justify-center mx-auto mb-2 text-[#9b9a97]"
+    >
+      <svg
+        class="w-6 h-6"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
         <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-        <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+        <path
+          d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"
+        ></path>
       </svg>
     </div>
-    <h3 class="text-sm font-semibold text-[#18181b]">This shared Brain Vault has no items</h3>
-    <p class="text-xs text-[#787774] mt-1">The curator has not published any links or notes yet.</p>
+    <h3 class="text-sm font-semibold text-[#18181b]">
+      This shared Link Vault has no items
+    </h3>
+    <p class="text-xs text-[#787774] mt-1">
+      The curator has not published any links or notes yet.
+    </p>
   </div>
   {% endif %}
 </div>
 
 <!-- Mobile Bottom App Navigation Bar -->
-<nav class="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-[#ecece9] flex items-center justify-around px-2 py-1 shadow-lg safe-area-bottom">
-  <a href="/" class="flex flex-col items-center justify-center py-1.5 px-3 text-[#18181b] rounded-lg transition-colors">
-    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<nav
+  class="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-[#ecece9] flex items-center justify-around px-2 py-1 shadow-lg safe-area-bottom"
+>
+  <a
+    href="/"
+    class="flex flex-col items-center justify-center py-1.5 px-3 text-[#18181b] rounded-lg transition-colors"
+  >
+    <svg
+      class="w-5 h-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
       <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
       <polyline points="9 22 9 12 15 12 15 22"></polyline>
     </svg>
     <span class="text-[10px] font-medium mt-0.5">Home</span>
   </a>
-  <a href="/login/" class="flex flex-col items-center justify-center py-1.5 px-3 text-[#787774] hover:text-[#18181b] rounded-lg transition-colors">
-    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <a
+    href="/login/"
+    class="flex flex-col items-center justify-center py-1.5 px-3 text-[#787774] hover:text-[#18181b] rounded-lg transition-colors"
+  >
+    <svg
+      class="w-5 h-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
       <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
       <polyline points="10 17 15 12 10 7"></polyline>
       <line x1="15" y1="12" x2="3" y2="12"></line>
     </svg>
     <span class="text-[10px] font-medium mt-0.5">Sign In</span>
   </a>
-  <a href="/register/" class="flex flex-col items-center justify-center py-1.5 px-3 text-[#787774] hover:text-[#18181b] rounded-lg transition-colors">
-    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <a
+    href="/register/"
+    class="flex flex-col items-center justify-center py-1.5 px-3 text-[#787774] hover:text-[#18181b] rounded-lg transition-colors"
+  >
+    <svg
+      class="w-5 h-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
       <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
       <circle cx="8.5" cy="7" r="4"></circle>
       <line x1="20" y1="8" x2="20" y2="14"></line>
@@ -133,8 +232,19 @@
     </svg>
     <span class="text-[10px] font-medium mt-0.5">Register</span>
   </a>
-  <a href="/api-refrances/" class="flex flex-col items-center justify-center py-1.5 px-3 text-[#787774] hover:text-[#18181b] rounded-lg transition-colors">
-    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <a
+    href="/api-refrances/"
+    class="flex flex-col items-center justify-center py-1.5 px-3 text-[#787774] hover:text-[#18181b] rounded-lg transition-colors"
+  >
+    <svg
+      class="w-5 h-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
       <polyline points="4 17 10 11 4 5"></polyline>
       <line x1="12" y1="19" x2="20" y2="19"></line>
     </svg>

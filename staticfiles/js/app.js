@@ -1,5 +1,5 @@
 /**
- * Brain Vault Client-Side Controller
+ * Link Vault Client-Side Controller
  * Interfaces with Django 5.2 Asynchronous PyMongo API endpoints.
  */
 
@@ -23,7 +23,8 @@ let appState = {
 
 // Initialize Application
 document.addEventListener('DOMContentLoaded', async () => {
-  await checkAuthAndBootstrap();
+  const isAuthenticated = await checkAuthAndBootstrap();
+  if (!isAuthenticated) return;
   await refreshDashboard();
 });
 
@@ -38,31 +39,23 @@ async function checkAuthAndBootstrap() {
         const data = await res.json();
         appState.user = data.data;
         updateNavAuthUI();
-        return;
+        return true;
       }
     } catch (e) {
       console.warn('Auth check failed:', e);
     }
   }
 
-  // Auto sign in as demo curator for seamless exploration
-  try {
-    const res = await fetch('/api/v1/auth/signin', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: 'notion_curator', password: 'demo123' })
-    });
-    if (res.ok) {
-      const data = await res.json();
-      appState.token = data.token;
-      appState.user = data.user;
-      localStorage.setItem('bv_token', data.token);
-      localStorage.setItem('bv_user', JSON.stringify(data.user));
-      updateNavAuthUI();
-    }
-  } catch (err) {
-    console.error('Demo auth failed:', err);
-  }
+  clearAuthStorage();
+  window.location.replace('/register/?next=/');
+  return false;
+}
+
+function clearAuthStorage() {
+  localStorage.removeItem('bv_token');
+  localStorage.removeItem('bv_user');
+  appState.token = null;
+  appState.user = null;
 }
 
 function updateNavAuthUI() {
@@ -95,12 +88,13 @@ function updateNavAuthUI() {
   if (window.lucide) window.lucide.createIcons();
 }
 
-function handleLogout() {
-  localStorage.removeItem('bv_token');
-  localStorage.removeItem('bv_user');
-  appState.token = null;
-  appState.user = null;
-  window.location.reload();
+async function handleLogout() {
+  try {
+    await fetch('/api/v1/auth/signout', { method: 'POST' });
+  } finally {
+    clearAuthStorage();
+    window.location.replace('/register/');
+  }
 }
 
 // Data Fetching & State Refreshing
@@ -706,7 +700,7 @@ async function handleQuickCapture(e) {
 
     if (res.ok) {
       input.value = '';
-      window.showToast('Captured directly into Brain Vault', 'success');
+      window.showToast('Captured directly into Link Vault', 'success');
       await refreshDashboard();
     } else {
       const data = await res.json();
@@ -810,7 +804,7 @@ async function handleSaveContent(e) {
     }
 
     closeAddModal();
-    window.showToast(editId ? 'Item updated in Brain Vault' : 'Item saved asynchronously to Brain Vault', 'success');
+    window.showToast(editId ? 'Item updated in Link Vault' : 'Item saved asynchronously to Link Vault', 'success');
     await refreshDashboard();
   } catch (err) {
     window.showToast(err.message, 'error');
@@ -818,14 +812,14 @@ async function handleSaveContent(e) {
 }
 
 async function handleDeleteContent(itemId) {
-  if (!confirm('Are you sure you want to delete this item from Brain Vault?')) return;
+  if (!confirm('Are you sure you want to delete this item from Link Vault?')) return;
   try {
     const res = await fetch(`/api/v1/content/${itemId}`, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${appState.token}` }
     });
     if (res.ok) {
-      window.showToast('Item deleted from Brain Vault', 'info');
+      window.showToast('Item deleted from Link Vault', 'info');
       await refreshDashboard();
     }
   } catch (err) {
@@ -927,7 +921,7 @@ async function handleToggleShare(enabled) {
       appState.isShared = data.data.shared;
       appState.shareHash = data.data.hash;
       updateShareModalUI();
-      window.showToast(enabled ? 'Brain Vault is now publicly accessible' : 'Public sharing disabled', 'info');
+      window.showToast(enabled ? 'Link Vault is now publicly accessible' : 'Public sharing disabled', 'info');
     }
   } catch (err) {
     window.showToast('Failed to update share setting', 'error');

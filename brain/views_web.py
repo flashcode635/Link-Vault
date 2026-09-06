@@ -1,5 +1,5 @@
 """
-Django template rendering views (asynchronous) for BrainVault.
+Django template rendering views (asynchronous) for Link Vault.
 """
 
 from django.shortcuts import render, redirect
@@ -9,14 +9,14 @@ from brain.models_mongo import serialize_doc
 from brain.auth_mongo import authenticate_request
 
 async def dashboard_view(request):
-    """Render the primary Notion-style Second Brain dashboard."""
+    """Render the primary Notion-style Link Vault dashboard."""
     user, _ = await authenticate_request(request)
     db = await get_database()
     
     is_mock = mongo_manager.is_mock_mode()
     
     context = {
-        "title": "Brain Vault - Knowledge Second Brain",
+        "title": "Link Vault - Knowledge Workspace",
         "user": serialize_doc(user) if user else None,
         "is_authenticated": user is not None,
         "is_mock_mode": is_mock,
@@ -30,7 +30,7 @@ async def shared_brain_view(request, share_hash: str):
     link_doc = await db.links.find_one({"hash": share_hash})
     if not link_doc:
         return render(request, '404.html', {
-            "title": "Brain Vault - Brain Not Found",
+            "title": "Link Vault - Link Collection Not Found",
             "message": f"No shared brain was found with reference '{share_hash}'."
         }, status=404)
 
@@ -44,7 +44,7 @@ async def shared_brain_view(request, share_hash: str):
         items.append(serialize_doc(doc))
 
     context = {
-        "title": f"{username}'s Second Brain - Brain Vault",
+        "title": f"{username}'s Link Vault",
         "curator_username": username,
         "share_hash": share_hash,
         "items": items,
@@ -54,17 +54,17 @@ async def shared_brain_view(request, share_hash: str):
 
 async def login_view(request):
     """Render the sign in template."""
-    return render(request, 'login.html', {"title": "Sign In - Brain Vault"})
+    return render(request, 'login.html', {"title": "Sign In - Link Vault"})
 
 async def register_view(request):
     """Render the registration template."""
-    return render(request, 'register.html', {"title": "Create Account - Brain Vault"})
+    return render(request, 'register.html', {"title": "Create Account - Link Vault"})
 
 async def api_docs_view(request):
     """Render the interactive PyMongo Async API documentation and testing hub."""
     is_mock = mongo_manager.is_mock_mode()
     return render(request, 'api_docs.html', {
-        "title": "API Reference - Brain Vault",
+        "title": "API Reference - Link Vault",
         "is_mock_mode": is_mock,
     })
 

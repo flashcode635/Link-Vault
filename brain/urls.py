@@ -19,6 +19,7 @@ urlpatterns = [
     # REST API v1 (PyMongo Async Engine)
     path('api/v1/auth/signup', views_api.api_signup, name='api_signup'),
     path('api/v1/auth/signin', views_api.api_signin, name='api_signin'),
+    path('api/v1/auth/signout', views_api.api_signout, name='api_signout'),
     path('api/v1/auth/me', views_api.api_me, name='api_me'),
 
     path('api/v1/content', views_api.api_content_list, name='api_content_list'),

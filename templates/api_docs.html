@@ -1,107 +1,184 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <div class="max-w-5xl mx-auto w-full px-4 sm:px-6 py-6 pb-24 md:pb-12">
   <!-- Back to Dashboard Breadcrumb -->
   <div class="mb-4">
-    <a href="/" class="inline-flex items-center gap-1.5 text-xs font-medium text-[#787774] hover:text-[#37352f] transition-colors py-1">
-      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <a
+      href="/"
+      class="inline-flex items-center gap-1.5 text-xs font-medium text-[#787774] hover:text-[#37352f] transition-colors py-1"
+    >
+      <svg
+        class="w-3.5 h-3.5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
         <line x1="19" y1="12" x2="5" y2="12"></line>
         <polyline points="12 19 5 12 12 5"></polyline>
       </svg>
-      <span>Back to Brain Vault dashboard</span>
+      <span>Back to Link Vault dashboard</span>
     </a>
   </div>
 
   <div class="mb-8">
     <div class="flex items-center gap-2 mb-2">
-      <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#ecfdf5] text-[#065f46] border border-[#a7f3d0]">
+      <span
+        class="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#ecfdf5] text-[#065f46] border border-[#a7f3d0]"
+      >
         PyMongo 4.9+ Async Engine
       </span>
-      <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#eff6ff] text-[#1e40af] border border-[#bfdbfe]">
+      <span
+        class="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#eff6ff] text-[#1e40af] border border-[#bfdbfe]"
+      >
         Django 5.2 / ASGI
       </span>
     </div>
-    <h1 class="text-xl font-bold text-[#18181b] tracking-tight">Brain Vault - API Reference & Architecture</h1>
+    <h1 class="text-xl font-bold text-[#18181b] tracking-tight">
+      Link Vault - API Reference & Architecture
+    </h1>
     <p class="text-xs text-[#787774] mt-1">
-      Complete documentation for all asynchronous REST API endpoints querying MongoDB via PyMongo's native <code class="bg-[#f0f0ef] px-1 py-0.5 rounded font-mono text-[#37352f]">AsyncMongoClient</code>.
+      Complete documentation for all asynchronous REST API endpoints querying
+      MongoDB via PyMongo's native
+      <code class="bg-[#f0f0ef] px-1 py-0.5 rounded font-mono text-[#37352f]"
+        >AsyncMongoClient</code
+      >.
     </p>
   </div>
 
   <!-- Endpoints List -->
   <div class="space-y-6">
     <!-- Auth Section -->
-    <div class="bg-white border border-[#ecece9] rounded-xl overflow-hidden shadow-2xs">
-      <div class="px-5 py-3.5 bg-[#fbfbfa] border-b border-[#ecece9] flex items-center justify-between">
-        <h2 class="text-xs font-semibold uppercase tracking-wider text-[#787774]">Authentication</h2>
-        <span class="text-[11px] text-[#9b9a97] font-mono">JWT Bearer / Cookie</span>
+    <div
+      class="bg-white border border-[#ecece9] rounded-xl overflow-hidden shadow-2xs"
+    >
+      <div
+        class="px-5 py-3.5 bg-[#fbfbfa] border-b border-[#ecece9] flex items-center justify-between"
+      >
+        <h2
+          class="text-xs font-semibold uppercase tracking-wider text-[#787774]"
+        >
+          Authentication
+        </h2>
+        <span class="text-[11px] text-[#9b9a97] font-mono"
+          >JWT Bearer / Cookie</span
+        >
       </div>
       <div class="divide-y divide-[#f5f5f4] text-xs">
         <div class="p-4">
           <div class="flex items-center gap-2 font-mono">
-            <span class="px-2 py-0.5 rounded font-bold bg-blue-100 text-blue-800">POST</span>
+            <span
+              class="px-2 py-0.5 rounded font-bold bg-blue-100 text-blue-800"
+              >POST</span
+            >
             <span class="text-[#37352f]">/api/v1/auth/signup</span>
           </div>
-          <p class="text-[#787774] mt-1.5">Register a new user account into MongoDB with bcrypt hashing.</p>
-        </div>
-
-        <div class="p-4">
-          <div class="flex items-center gap-2 font-mono">
-            <span class="px-2 py-0.5 rounded font-bold bg-blue-100 text-blue-800">POST</span>
-            <span class="text-[#37352f]">/api/v1/auth/signin</span>
-          </div>
-          <p class="text-[#787774] mt-1.5">Verify user credentials against MongoDB and receive JWT access token.</p>
-        </div>
-
-        <div class="p-4">
-          <div class="flex items-center gap-2 font-mono">
-            <span class="px-2 py-0.5 rounded font-bold bg-emerald-100 text-emerald-800">GET</span>
-            <span class="text-[#37352f]">/api/v1/auth/me</span>
-          </div>
-          <p class="text-[#787774] mt-1.5">Fetch current user document from MongoDB via PyMongo Async.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Content Section -->
-    <div class="bg-white border border-[#ecece9] rounded-xl overflow-hidden shadow-2xs">
-      <div class="px-5 py-3.5 bg-[#fbfbfa] border-b border-[#ecece9] flex items-center justify-between">
-        <h2 class="text-xs font-semibold uppercase tracking-wider text-[#787774]">Knowledge & Links (CRUD)</h2>
-        <span class="text-[11px] text-[#9b9a97] font-mono">Async Collection: content</span>
-      </div>
-      <div class="divide-y divide-[#f5f5f4] text-xs">
-        <div class="p-4">
-          <div class="flex items-center gap-2 font-mono">
-            <span class="px-2 py-0.5 rounded font-bold bg-emerald-100 text-emerald-800">GET</span>
-            <span class="text-[#37352f]">/api/v1/content</span>
-          </div>
           <p class="text-[#787774] mt-1.5">
-            Query saved knowledge with optional query parameters: <code class="bg-[#f0f0ee] px-1 py-0.5 rounded">folder_id</code>, <code class="bg-[#f0f0ee] px-1 py-0.5 rounded">type</code>, <code class="bg-[#f0f0ee] px-1 py-0.5 rounded">tag</code>, <code class="bg-[#f0f0ee] px-1 py-0.5 rounded">q</code>.
+            Register a new user account into MongoDB with bcrypt hashing.
           </p>
         </div>
 
         <div class="p-4">
           <div class="flex items-center gap-2 font-mono">
-            <span class="px-2 py-0.5 rounded font-bold bg-blue-100 text-blue-800">POST</span>
+            <span
+              class="px-2 py-0.5 rounded font-bold bg-blue-100 text-blue-800"
+              >POST</span
+            >
+            <span class="text-[#37352f]">/api/v1/auth/signin</span>
+          </div>
+          <p class="text-[#787774] mt-1.5">
+            Verify user credentials against MongoDB and receive JWT access
+            token.
+          </p>
+        </div>
+
+        <div class="p-4">
+          <div class="flex items-center gap-2 font-mono">
+            <span
+              class="px-2 py-0.5 rounded font-bold bg-emerald-100 text-emerald-800"
+              >GET</span
+            >
+            <span class="text-[#37352f]">/api/v1/auth/me</span>
+          </div>
+          <p class="text-[#787774] mt-1.5">
+            Fetch current user document from MongoDB via PyMongo Async.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Section -->
+    <div
+      class="bg-white border border-[#ecece9] rounded-xl overflow-hidden shadow-2xs"
+    >
+      <div
+        class="px-5 py-3.5 bg-[#fbfbfa] border-b border-[#ecece9] flex items-center justify-between"
+      >
+        <h2
+          class="text-xs font-semibold uppercase tracking-wider text-[#787774]"
+        >
+          Knowledge & Links (CRUD)
+        </h2>
+        <span class="text-[11px] text-[#9b9a97] font-mono"
+          >Async Collection: content</span
+        >
+      </div>
+      <div class="divide-y divide-[#f5f5f4] text-xs">
+        <div class="p-4">
+          <div class="flex items-center gap-2 font-mono">
+            <span
+              class="px-2 py-0.5 rounded font-bold bg-emerald-100 text-emerald-800"
+              >GET</span
+            >
             <span class="text-[#37352f]">/api/v1/content</span>
           </div>
-          <p class="text-[#787774] mt-1.5">Insert new content document asynchronously into MongoDB.</p>
+          <p class="text-[#787774] mt-1.5">
+            Query saved knowledge with optional query parameters:
+            <code class="bg-[#f0f0ee] px-1 py-0.5 rounded">folder_id</code>,
+            <code class="bg-[#f0f0ee] px-1 py-0.5 rounded">type</code>,
+            <code class="bg-[#f0f0ee] px-1 py-0.5 rounded">tag</code>,
+            <code class="bg-[#f0f0ee] px-1 py-0.5 rounded">q</code>.
+          </p>
         </div>
 
         <div class="p-4">
           <div class="flex items-center gap-2 font-mono">
-            <span class="px-2 py-0.5 rounded font-bold bg-amber-100 text-amber-800">PUT</span>
-            <span class="text-[#37352f]">/api/v1/content/&lt;id&gt;</span>
+            <span
+              class="px-2 py-0.5 rounded font-bold bg-blue-100 text-blue-800"
+              >POST</span
+            >
+            <span class="text-[#37352f]">/api/v1/content</span>
           </div>
-          <p class="text-[#787774] mt-1.5">Update title, link, notes, folder, or tags for existing item.</p>
+          <p class="text-[#787774] mt-1.5">
+            Insert new content document asynchronously into MongoDB.
+          </p>
         </div>
 
         <div class="p-4">
           <div class="flex items-center gap-2 font-mono">
-            <span class="px-2 py-0.5 rounded font-bold bg-rose-100 text-rose-800">DELETE</span>
+            <span
+              class="px-2 py-0.5 rounded font-bold bg-amber-100 text-amber-800"
+              >PUT</span
+            >
             <span class="text-[#37352f]">/api/v1/content/&lt;id&gt;</span>
           </div>
-          <p class="text-[#787774] mt-1.5">Remove content document by ObjectId from collection.</p>
+          <p class="text-[#787774] mt-1.5">
+            Update title, link, notes, folder, or tags for existing item.
+          </p>
+        </div>
+
+        <div class="p-4">
+          <div class="flex items-center gap-2 font-mono">
+            <span
+              class="px-2 py-0.5 rounded font-bold bg-rose-100 text-rose-800"
+              >DELETE</span
+            >
+            <span class="text-[#37352f]">/api/v1/content/&lt;id&gt;</span>
+          </div>
+          <p class="text-[#787774] mt-1.5">
+            Remove content document by ObjectId from collection.
+          </p>
         </div>
       </div>
     </div>
@@ -109,12 +186,22 @@
     <!-- Live Health & Diagnostic -->
     <div class="bg-white border border-[#ecece9] rounded-xl p-5 shadow-2xs">
       <div class="flex items-center justify-between mb-3">
-        <h2 class="text-xs font-semibold uppercase tracking-wider text-[#787774]">Live Driver Diagnostics</h2>
-        <button onclick="testHealth()" class="px-2.5 py-1 text-xs font-medium bg-[#f0f0ef] hover:bg-[#e5e5e3] rounded text-[#37352f] transition-colors">
+        <h2
+          class="text-xs font-semibold uppercase tracking-wider text-[#787774]"
+        >
+          Live Driver Diagnostics
+        </h2>
+        <button
+          onclick="testHealth()"
+          class="px-2.5 py-1 text-xs font-medium bg-[#f0f0ef] hover:bg-[#e5e5e3] rounded text-[#37352f] transition-colors"
+        >
           Run Diagnostic
         </button>
       </div>
-      <pre id="health-output" class="bg-[#18181b] text-[#e4e4e7] p-4 rounded-lg font-mono text-xs overflow-x-auto">
+      <pre
+        id="health-output"
+        class="bg-[#18181b] text-[#e4e4e7] p-4 rounded-lg font-mono text-xs overflow-x-auto"
+      >
 Click "Run Diagnostic" to ping the PyMongo Async Engine...
       </pre>
     </div>
@@ -122,9 +209,22 @@ Click "Run Diagnostic" to ping the PyMongo Async Engine...
 </div>
 
 <!-- Mobile Bottom Navigation (API docs page) -->
-<nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#ecece9] flex items-center justify-around px-4 py-2 shadow-lg">
-  <a href="/" class="flex flex-col items-center justify-center py-1 px-4 text-[#787774] hover:text-[#37352f] rounded-lg transition-colors">
-    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<nav
+  class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#ecece9] flex items-center justify-around px-4 py-2 shadow-lg"
+>
+  <a
+    href="/"
+    class="flex flex-col items-center justify-center py-1 px-4 text-[#787774] hover:text-[#37352f] rounded-lg transition-colors"
+  >
+    <svg
+      class="w-5 h-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
       <rect x="3" y="3" width="18" height="18" rx="3"></rect>
       <circle cx="12" cy="12" r="3"></circle>
       <path d="M12 9v1"></path>
@@ -135,15 +235,37 @@ Click "Run Diagnostic" to ping the PyMongo Async Engine...
     <span class="text-[10px] font-medium mt-0.5">Dashboard</span>
   </a>
 
-  <button onclick="testHealth()" class="flex flex-col items-center justify-center py-1 px-4 text-[#787774] hover:text-[#37352f] rounded-lg transition-colors">
-    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <button
+    onclick="testHealth()"
+    class="flex flex-col items-center justify-center py-1 px-4 text-[#787774] hover:text-[#37352f] rounded-lg transition-colors"
+  >
+    <svg
+      class="w-5 h-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
       <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
     </svg>
     <span class="text-[10px] font-medium mt-0.5">Test API</span>
   </button>
 
-  <a href="/docs/" class="flex flex-col items-center justify-center py-1 px-4 text-[#37352f] font-semibold rounded-lg transition-colors">
-    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <a
+    href="/docs/"
+    class="flex flex-col items-center justify-center py-1 px-4 text-[#37352f] font-semibold rounded-lg transition-colors"
+  >
+    <svg
+      class="w-5 h-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
       <polyline points="4 17 10 11 4 5"></polyline>
       <line x1="12" y1="19" x2="20" y2="19"></line>
     </svg>
@@ -153,18 +275,18 @@ Click "Run Diagnostic" to ping the PyMongo Async Engine...
 
 <script>
   async function testHealth() {
-    const el = document.getElementById('health-output');
-    el.innerText = 'Pinging /api/v1/health...';
+    const el = document.getElementById("health-output");
+    el.innerText = "Pinging /api/v1/health...";
     try {
-      const res = await fetch('/api/v1/health');
+      const res = await fetch("/api/v1/health");
       const data = await res.json();
       el.innerText = JSON.stringify(data, null, 2);
     } catch (err) {
-      el.innerText = 'Error: ' + err.message;
+      el.innerText = "Error: " + err.message;
     }
   }
 
   // Auto ping on load
-  document.addEventListener('DOMContentLoaded', testHealth);
+  document.addEventListener("DOMContentLoaded", testHealth);
 </script>
 {% endblock %}

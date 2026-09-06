@@ -1,5 +1,5 @@
 """
-Asynchronous REST API views for Second Brain using PyMongo's AsyncMongoClient API.
+Asynchronous REST API views for Link Vault using PyMongo's AsyncMongoClient API.
 """
 
 import json
@@ -109,6 +109,17 @@ async def api_signin(request):
         "user": user_resp
     })
     response.set_cookie('access_token', token, httponly=True, samesite='Lax', max_age=86400 * 3)
+    return response
+
+
+@csrf_exempt
+async def api_signout(request):
+    """POST /api/v1/auth/signout - Clear the authentication cookie."""
+    if request.method != 'POST':
+        return json_error("Method not allowed", 405)
+
+    response = JsonResponse({"status": "success", "message": "Signed out successfully"})
+    response.delete_cookie('access_token', samesite='Lax')
     return response
 
 
