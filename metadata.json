@@ -1,0 +1,6 @@
+{
+  "name": "Brain Vault",
+  "description": "A minimalist Notion-style link and note storing application with private folders, tags, search, and sharable brain links.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,9 @@
+django>=5.0,<6.1
+pymongo>=4.9.0
+uvicorn>=0.30.0
+python-dotenv>=1.0.0
+bcrypt>=4.1.0
+pyjwt>=2.8.0
+asgiref>=3.8.0
+mongomock>=4.3.0
+mongomock-motor>=0.0.36

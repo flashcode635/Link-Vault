@@ -1,0 +1,581 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script>
+  // Ensure modal handlers and mobile drawer are instantly callable
+  window.openAddModal = window.openAddModal || function() {
+    const el = document.getElementById('modal-add-content');
+    if (el) el.classList.remove('hidden');
+  };
+  window.closeAddModal = window.closeAddModal || function() {
+    const el = document.getElementById('modal-add-content');
+    if (el) el.classList.add('hidden');
+  };
+  window.openNewFolderModal = window.openNewFolderModal || function() {
+    const el = document.getElementById('modal-new-folder');
+    if (el) el.classList.remove('hidden');
+  };
+  window.closeNewFolderModal = window.closeNewFolderModal || function() {
+    const el = document.getElementById('modal-new-folder');
+    if (el) el.classList.add('hidden');
+  };
+  window.openShareModal = window.openShareModal || function() {
+    const el = document.getElementById('modal-share');
+    if (el) el.classList.remove('hidden');
+  };
+  window.closeShareModal = window.closeShareModal || function() {
+    const el = document.getElementById('modal-share');
+    if (el) el.classList.add('hidden');
+  };
+  window.toggleMobileSidebar = window.toggleMobileSidebar || function(force) {
+    const sidebar = document.getElementById('dashboard-sidebar');
+    const backdrop = document.getElementById('mobile-sidebar-backdrop');
+    if (!sidebar) return;
+    const isClosed = sidebar.classList.contains('-translate-x-full');
+    const shouldOpen = force !== undefined ? force : isClosed;
+    if (shouldOpen) {
+      sidebar.classList.remove('-translate-x-full');
+      if (backdrop) backdrop.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden', 'md:overflow-auto');
+    } else {
+      sidebar.classList.add('-translate-x-full');
+      if (backdrop) backdrop.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden', 'md:overflow-auto');
+    }
+  };
+</script>
+<div class="flex-1 flex min-h-[calc(100vh-3.5rem)] overflow-hidden bg-white relative">
+  
+  <!-- Mobile Drawer Backdrop -->
+  <div id="mobile-sidebar-backdrop" onclick="toggleMobileSidebar(false)" class="hidden fixed inset-0 bg-black/40 z-40 md:hidden backdrop-blur-xs transition-opacity"></div>
+
+  <!-- Sidebar (Responsive drawer on mobile, static on desktop matching reference) -->
+  <aside id="dashboard-sidebar" class="fixed inset-y-0 left-0 z-40 w-72 max-w-[85vw] bg-[#fbfbfa] border-r border-[#ecece9] flex flex-col -translate-x-full transition-transform duration-200 md:translate-x-0 md:static md:w-64 md:z-0 shrink-0">
+    <!-- Curator Workspace Title (Matching Reference Image) -->
+    <div class="p-3.5 border-b border-[#ecece9]">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <!-- Serif BV Badge -->
+          <div class="w-7 h-7 rounded-md bg-[#18181b] text-white flex items-center justify-center font-serif font-bold text-xs tracking-tight shadow-xs select-none">
+            BV
+          </div>
+          <div class="flex flex-col">
+            <span class="font-semibold text-xs text-[#18181b] tracking-tight leading-tight">Curator Workspace</span>
+            <span class="text-[10px] text-[#9b9a97] leading-tight">Personal Knowledge Base</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-1">
+          <button id="sidebar-add-content-btn" onclick="openAddModal()" class="p-1 hover:bg-[#ecece9] rounded text-[#787774] hover:text-[#18181b] transition-colors" title="Quick Add">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+          <button onclick="toggleMobileSidebar(false)" class="md:hidden p-1 hover:bg-[#ecece9] rounded text-[#787774] hover:text-[#18181b] transition-colors" title="Close">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation List -->
+    <div class="flex-1 overflow-y-auto p-3 space-y-5">
+      <!-- Standard Views: KNOWLEDGE VIEWS -->
+      <div>
+        <div class="text-[10px] font-bold uppercase tracking-wider text-[#9b9a97] px-2 mb-1.5">
+          KNOWLEDGE VIEWS
+        </div>
+        <nav class="space-y-0.5">
+          <!-- All Content -->
+          <button onclick="filterByType(null)" id="filter-all-btn" class="sidebar-item w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#18181b] bg-[#efeeea]">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#787774]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 12 17 22 12"></polyline>
+              </svg>
+              <span>All Content</span>
+            </div>
+            <span id="badge-count-all" class="text-[11px] font-mono font-medium text-[#787774]">0</span>
+          </button>
+
+          <!-- YouTube -->
+          <button onclick="filterByType('youtube')" id="filter-youtube-btn" class="sidebar-item w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#787774] hover:text-[#18181b] hover:bg-[#f0f0ef] transition-colors">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#787774]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2.18"></rect>
+                <polygon points="10 8 16 12 10 16 10 8"></polygon>
+              </svg>
+              <span>YouTube</span>
+            </div>
+            <span id="badge-count-youtube" class="text-[11px] font-mono font-medium text-[#787774]">0</span>
+          </button>
+
+          <!-- Twitter / X (Matching Reference with X logo) -->
+          <button onclick="filterByType('twitter')" id="filter-twitter-btn" class="sidebar-item w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#787774] hover:text-[#18181b] hover:bg-[#f0f0ef] transition-colors">
+            <div class="flex items-center gap-2">
+              <!-- Official 𝕏 SVG -->
+              <svg class="w-3.5 h-3.5 text-[#18181b] shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+              <span>Twitter / X</span>
+            </div>
+            <span id="badge-count-twitter" class="text-[11px] font-mono font-medium text-[#787774]">0</span>
+          </button>
+
+          <!-- Articles -->
+          <button onclick="filterByType('article')" id="filter-article-btn" class="sidebar-item w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#787774] hover:text-[#18181b] hover:bg-[#f0f0ef] transition-colors">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#787774]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              <span>Articles</span>
+            </div>
+            <span id="badge-count-article" class="text-[11px] font-mono font-medium text-[#787774]">0</span>
+          </button>
+
+          <!-- Documents -->
+          <button onclick="filterByType('document')" id="filter-document-btn" class="sidebar-item w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#787774] hover:text-[#18181b] hover:bg-[#f0f0ef] transition-colors">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#787774]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path>
+                <path d="M6 6h10"></path>
+                <path d="M6 10h10"></path>
+              </svg>
+              <span>Documents</span>
+            </div>
+            <span id="badge-count-document" class="text-[11px] font-mono font-medium text-[#787774]">0</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Folders Section: FOLDERS & SPACES -->
+      <div>
+        <div class="flex items-center justify-between px-2 mb-1.5">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-[#9b9a97]">FOLDERS & SPACES</span>
+          <button onclick="openNewFolderModal()" class="text-[#9b9a97] hover:text-[#18181b] p-0.5 rounded transition-colors" title="Create Folder">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+        <div id="sidebar-folders-list" class="space-y-0.5">
+          <!-- Populated by JavaScript with colored dots and count numbers -->
+        </div>
+      </div>
+
+      <!-- Curated Tags Section: CURATED TAGS -->
+      <div>
+        <div class="text-[10px] font-bold uppercase tracking-wider text-[#9b9a97] px-2 mb-2">
+          CURATED TAGS
+        </div>
+        <div id="sidebar-tags-list" class="flex flex-wrap gap-1.5 px-2">
+          <!-- Populated by JavaScript as clean #pills -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar Footer: Settings and API Ref (Matching Reference Image) -->
+    <div class="p-3 border-t border-[#ecece9] bg-[#fbfbfa] text-xs text-[#787774] flex items-center justify-between">
+      <button onclick="openShareModal()" class="hover:text-[#18181b] font-medium flex items-center gap-1.5 transition-colors">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        <span>Settings</span>
+      </button>
+
+      <a href="/api-refrances/" class="text-[#787774] hover:text-[#18181b] font-medium flex items-center gap-1 transition-colors text-xs" title="API Reference">
+        <span>API Ref</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Workspace Main Content -->
+  <section class="flex-1 flex flex-col min-w-0 overflow-hidden bg-white">
+    <!-- Active Scope & Breadcrumbs Bar (Matching Reference Image) -->
+    <div class="px-4 sm:px-8 py-3 border-b border-[#ecece9] bg-white flex flex-wrap items-center justify-between gap-3 shrink-0">
+      <!-- Left: ACTIVE SCOPE / Platform • TWITTER / X -->
+      <div class="flex items-center gap-2 text-xs">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-[#9b9a97] leading-none">ACTIVE<br class="hidden xs:inline">SCOPE</span>
+        <span class="text-[#d4d4d0] font-light">/</span>
+        <span id="scope-category-name" class="font-medium text-[#18181b]">Platform</span>
+        
+        <!-- Active Filter Pill with Dismiss Button -->
+        <div id="active-scope-pill" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-[#f0f0ef] text-[#18181b]">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#18181b]"></span>
+          <span id="active-scope-text">All Content</span>
+          <button id="active-scope-dismiss" onclick="resetFilters()" class="hidden hover:text-red-600 ml-0.5 text-xs leading-none">×</button>
+        </div>
+      </div>
+
+      <!-- Right: Showing X of Y items | Sort: Most Recent ⌵ -->
+      <div class="flex items-center gap-3 text-xs text-[#787774]">
+        <span id="items-count-display">Showing 0 of 0 items</span>
+        <span class="text-[#e5e5e3]">|</span>
+        <div class="flex items-center gap-1.5">
+          <span>Sort:</span>
+          <select id="dashboard-sort-select" onchange="handleSortChange(this.value)" class="bg-transparent text-[#18181b] font-medium outline-none cursor-pointer text-xs pr-1">
+            <option value="recent">Most Recent</option>
+            <option value="oldest">Oldest</option>
+            <option value="title_asc">Title A-Z</option>
+            <option value="title_desc">Title Z-A</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards Scroll Area (With pb-28 on mobile for bottom bar clearance) -->
+    <div class="flex-1 overflow-y-auto px-4 sm:px-8 py-6 pb-28 md:pb-12">
+      <!-- Curated Stream Title & Subtitle (Matching Reference Image) -->
+      <div class="mb-6">
+        <h1 class="text-2xl sm:text-3xl font-serif font-medium text-[#18181b] tracking-tight">Curated Stream</h1>
+        <p class="text-xs sm:text-sm text-[#787774] mt-1 font-normal">Synthesized bookmarks, architecture memos, and verified technical insights across the web.</p>
+      </div>
+
+      <!-- Cards Grid Container -->
+      <div id="content-container" class="grid grid-cols-1 md:grid-cols-2 gap-4.5">
+        <!-- Content Cards dynamically populated -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="empty-state" class="hidden py-16 text-center max-w-md mx-auto">
+        <div class="w-12 h-12 rounded-xl bg-[#f7f6f3] border border-[#e5e5e3] flex items-center justify-center mx-auto mb-3 shadow-2xs">
+          <svg class="w-6 h-6 text-[#9b9a97]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path>
+            <path d="M6 6h10"></path>
+            <path d="M6 10h10"></path>
+          </svg>
+        </div>
+        <h3 class="text-sm font-semibold text-[#18181b] mb-1">No items found</h3>
+        <p class="text-xs text-[#787774] mb-4">No content matches your current query or filter in Brain Vault. Capture a new link or clear your filters.</p>
+        <button onclick="openAddModal()" class="px-4 py-2 bg-[#18181b] hover:bg-black text-white text-xs font-medium rounded-lg shadow-xs inline-flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>Add Knowledge Item</span>
+        </button>
+      </div>
+
+      <!-- Instant Quick Capture Bar (Matching Bottom Bar in Reference Image) -->
+      <div id="quick-capture-bar" class="mt-8 p-4 sm:p-5 rounded-2xl bg-[#fbfbfa] border border-[#ecece9] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-2xs">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-white border border-[#ecece9] flex items-center justify-center text-[#787774] shrink-0 shadow-2xs">
+            <svg class="w-4 h-4 text-[#18181b]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+            </svg>
+          </div>
+          <div>
+            <h4 class="text-xs font-semibold text-[#18181b]">Curate Instant Link or Raw Idea</h4>
+            <p class="text-[11px] text-[#787774]">Paste any X post, research paper, or YouTube URL directly to synchronize automatically.</p>
+          </div>
+        </div>
+        <form id="quick-capture-form" onsubmit="handleQuickCapture(event)" class="flex items-center gap-2 w-full md:w-auto md:min-w-[340px]">
+          <input
+            id="quick-capture-input"
+            type="text"
+            placeholder="Paste URL or type thought..."
+            required
+            class="flex-1 px-3.5 py-2 text-xs bg-white border border-[#ecece9] focus:border-[#18181b] rounded-lg outline-none text-[#18181b] placeholder:text-[#9b9a97] transition-all"
+          />
+          <button
+            type="submit"
+            class="px-4 py-2 bg-[#18181b] hover:bg-black text-white text-xs font-medium rounded-lg shrink-0 transition-colors shadow-xs"
+          >
+            Capture
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ======================================================== -->
+<!-- MOBILE APP BOTTOM NAVIGATION BAR (Visible on <md) -->
+<!-- ======================================================== -->
+<nav id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-[#ecece9] flex items-center justify-around px-2 py-1 shadow-lg safe-area-bottom">
+  <!-- All Items -->
+  <button onclick="filterByType(null); toggleMobileSidebar(false);" id="mobile-nav-all" class="flex flex-col items-center justify-center py-1.5 px-3 text-[#18181b] rounded-lg transition-colors" title="All Knowledge">
+    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+      <polyline points="2 17 12 22 22 17"></polyline>
+      <polyline points="2 12 12 17 22 12"></polyline>
+    </svg>
+    <span class="text-[10px] font-medium mt-0.5">All</span>
+  </button>
+
+  <!-- Folders Drawer Toggle -->
+  <button onclick="toggleMobileSidebar()" id="mobile-nav-folders" class="flex flex-col items-center justify-center py-1.5 px-3 text-[#787774] hover:text-[#18181b] rounded-lg transition-colors" title="Folders & Views">
+    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+    </svg>
+    <span class="text-[10px] font-medium mt-0.5">Folders</span>
+  </button>
+
+  <!-- Quick Add Floating Center Action Button -->
+  <button onclick="openAddModal()" id="mobile-nav-add" class="flex items-center justify-center w-11 h-11 -mt-4 rounded-full bg-[#18181b] text-white shadow-md active:scale-95 transition-transform border-4 border-white" title="Add Knowledge Item">
+    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"></line>
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+    </svg>
+  </button>
+
+  <!-- Share Modal -->
+  <button onclick="openShareModal()" id="mobile-nav-share" class="flex flex-col items-center justify-center py-1.5 px-3 text-[#787774] hover:text-[#18181b] rounded-lg transition-colors" title="Share Brain Vault">
+    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+    </svg>
+    <span class="text-[10px] font-medium mt-0.5">Share</span>
+  </button>
+
+  <!-- Separate API Docs Page -->
+  <a href="/api-refrances/" id="mobile-nav-docs" class="flex flex-col items-center justify-center py-1.5 px-3 text-[#787774] hover:text-[#18181b] rounded-lg transition-colors" title="API Reference">
+    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="4 17 10 11 4 5"></polyline>
+      <line x1="12" y1="19" x2="20" y2="19"></line>
+    </svg>
+    <span class="text-[10px] font-medium mt-0.5">API Ref</span>
+  </a>
+</nav>
+
+<!-- ======================================================== -->
+<!-- MODAL: ADD / EDIT CONTENT -->
+<!-- ======================================================== -->
+<div id="modal-add-content" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+  <div class="bg-white rounded-xl shadow-xl border border-[#ecece9] max-w-lg w-full overflow-hidden max-h-[90vh] flex flex-col">
+    <div class="px-5 py-4 border-b border-[#ecece9] flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-md bg-[#f7f6f3] border border-[#e5e5e3] flex items-center justify-center text-sm">
+          <svg class="w-4 h-4 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18h6"></path>
+            <path d="M10 22h4"></path>
+            <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5h6.18z"></path>
+          </svg>
+        </div>
+        <h3 id="modal-content-title" class="font-semibold text-sm text-[#37352f]">Add Knowledge Item</h3>
+      </div>
+      <button onclick="closeAddModal()" class="text-[#9b9a97] hover:text-[#37352f]">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <form id="form-add-content" onsubmit="handleSaveContent(event)" class="p-5 space-y-4 overflow-y-auto">
+      <input type="hidden" id="content-edit-id" value="">
+
+      <div>
+        <label class="block text-xs font-medium text-[#787774] mb-1">Title *</label>
+        <input
+          type="text"
+          id="content-title"
+          required
+          placeholder="e.g., Attention Is All You Need Paper"
+          class="w-full px-3 py-2 text-xs border border-[#e5e5e3] focus:border-[#37352f] rounded-lg outline-none"
+        />
+      </div>
+
+      <div>
+        <label class="block text-xs font-medium text-[#787774] mb-1">URL / Link</label>
+        <input
+          type="url"
+          id="content-link"
+          placeholder="https://youtube.com/watch?v=... or https://..."
+          class="w-full px-3 py-2 text-xs border border-[#e5e5e3] focus:border-[#37352f] rounded-lg outline-none"
+        />
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-medium text-[#787774] mb-1">Type</label>
+          <select id="content-type" class="w-full px-3 py-2 text-xs border border-[#e5e5e3] focus:border-[#37352f] rounded-lg outline-none bg-white">
+            <option value="article">Article / Page</option>
+            <option value="youtube">YouTube Video</option>
+            <option value="twitter">Twitter / X Post</option>
+            <option value="document">Document / Note</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-[#787774] mb-1">Folder</label>
+          <select id="content-folder" class="w-full px-3 py-2 text-xs border border-[#e5e5e3] focus:border-[#37352f] rounded-lg outline-none bg-white">
+            <option value="">No Folder (Root)</option>
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-medium text-[#787774] mb-1">Tags (comma-separated)</label>
+        <input
+          type="text"
+          id="content-tags"
+          placeholder="ai, django, architecture, python"
+          class="w-full px-3 py-2 text-xs border border-[#e5e5e3] focus:border-[#37352f] rounded-lg outline-none"
+        />
+      </div>
+
+      <div>
+        <label class="block text-xs font-medium text-[#787774] mb-1">Notes / Key Takeaways</label>
+        <textarea
+          id="content-notes"
+          rows="3"
+          placeholder="Capture summary, memorable quotes, or code snippets..."
+          class="w-full px-3 py-2 text-xs border border-[#e5e5e3] focus:border-[#37352f] rounded-lg outline-none resize-none"
+        ></textarea>
+      </div>
+
+      <div class="pt-2 flex items-center justify-end gap-2 border-t border-[#ecece9]">
+        <button type="button" onclick="closeAddModal()" class="px-3.5 py-1.5 text-xs text-[#787774] hover:text-[#37352f]">
+          Cancel
+        </button>
+        <button type="submit" id="btn-save-content" class="px-4 py-1.5 text-xs font-medium bg-[#37352f] hover:bg-black text-white rounded-lg transition-colors">
+          Save Item
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ======================================================== -->
+<!-- MODAL: NEW FOLDER -->
+<!-- ======================================================== -->
+<div id="modal-new-folder" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+  <div class="bg-white rounded-xl shadow-xl border border-[#ecece9] max-w-sm w-full overflow-hidden">
+    <div class="px-5 py-4 border-b border-[#ecece9] flex items-center justify-between">
+      <h3 class="font-semibold text-sm text-[#37352f]">Create Folder</h3>
+      <button onclick="closeNewFolderModal()" class="text-[#9b9a97] hover:text-[#37352f]">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+    <form onsubmit="handleCreateFolder(event)" class="p-5 space-y-4">
+      <div>
+        <label class="block text-xs font-medium text-[#787774] mb-1">Folder Name *</label>
+        <input
+          type="text"
+          id="new-folder-name"
+          required
+          placeholder="e.g., Deep Learning Research"
+          class="w-full px-3 py-2 text-xs border border-[#e5e5e3] focus:border-[#37352f] rounded-lg outline-none"
+        />
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-[#787774] mb-1.5">Color Accent</label>
+        <div class="flex items-center gap-2">
+          <label class="cursor-pointer">
+            <input type="radio" name="folder-color" value="#3b82f6" checked class="sr-only peer">
+            <span class="w-6 h-6 rounded-full bg-blue-500 inline-block border-2 border-transparent peer-checked:border-black"></span>
+          </label>
+          <label class="cursor-pointer">
+            <input type="radio" name="folder-color" value="#10b981" class="sr-only peer">
+            <span class="w-6 h-6 rounded-full bg-emerald-500 inline-block border-2 border-transparent peer-checked:border-black"></span>
+          </label>
+          <label class="cursor-pointer">
+            <input type="radio" name="folder-color" value="#8b5cf6" class="sr-only peer">
+            <span class="w-6 h-6 rounded-full bg-purple-500 inline-block border-2 border-transparent peer-checked:border-black"></span>
+          </label>
+          <label class="cursor-pointer">
+            <input type="radio" name="folder-color" value="#f59e0b" class="sr-only peer">
+            <span class="w-6 h-6 rounded-full bg-amber-500 inline-block border-2 border-transparent peer-checked:border-black"></span>
+          </label>
+          <label class="cursor-pointer">
+            <input type="radio" name="folder-color" value="#ec4899" class="sr-only peer">
+            <span class="w-6 h-6 rounded-full bg-pink-500 inline-block border-2 border-transparent peer-checked:border-black"></span>
+          </label>
+        </div>
+      </div>
+      <div class="pt-2 flex items-center justify-end gap-2 border-t border-[#ecece9]">
+        <button type="button" onclick="closeNewFolderModal()" class="px-3.5 py-1.5 text-xs text-[#787774] hover:text-[#37352f]">
+          Cancel
+        </button>
+        <button type="submit" class="px-4 py-1.5 text-xs font-medium bg-[#37352f] hover:bg-black text-white rounded-lg">
+          Create
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ======================================================== -->
+<!-- MODAL: SHARE BRAIN -->
+<!-- ======================================================== -->
+<div id="modal-share" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+  <div class="bg-white rounded-xl shadow-xl border border-[#ecece9] max-w-md w-full overflow-hidden">
+    <div class="px-5 py-4 border-b border-[#ecece9] flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <svg class="w-4 h-4 text-[#37352f]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="18" cy="5" r="3"></circle>
+          <circle cx="6" cy="12" r="3"></circle>
+          <circle cx="18" cy="19" r="3"></circle>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+        </svg>
+        <h3 class="font-semibold text-sm text-[#18181b]">Share Brain Vault</h3>
+      </div>
+      <button onclick="closeShareModal()" class="text-[#9b9a97] hover:text-[#18181b]">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="p-5 space-y-4">
+      <p class="text-xs text-[#787774] leading-relaxed">
+        Generate a unique public link to share your curated Brain Vault collection of videos, articles, documents, and notes with colleagues or publicly on the web.
+      </p>
+
+      <div class="flex items-center justify-between p-3 bg-[#f7f6f3] rounded-lg border border-[#ecece9]">
+        <div>
+          <span class="block text-xs font-medium text-[#18181b]">Public Access</span>
+          <span class="text-[11px] text-[#9b9a97]">Anyone with the link can view your Brain Vault</span>
+        </div>
+        <input
+          type="checkbox"
+          id="toggle-public-share"
+          onchange="handleToggleShare(this.checked)"
+          class="w-4 h-4 text-[#37352f] rounded border-[#d4d4d4] focus:ring-0 cursor-pointer"
+        />
+      </div>
+
+      <div id="share-link-group" class="hidden space-y-2">
+        <label class="block text-xs font-medium text-[#787774]">Sharable URL</label>
+        <div class="flex items-center gap-2">
+          <input
+            type="text"
+            id="share-link-input"
+            readonly
+            class="flex-1 px-3 py-2 text-xs bg-[#fbfbfa] border border-[#e5e5e3] rounded-lg text-[#37352f] font-mono select-all outline-none"
+          />
+          <button onclick="copyShareLink()" class="px-3 py-2 text-xs font-medium bg-[#37352f] text-white hover:bg-black rounded-lg transition-colors flex items-center gap-1">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            <span>Copy</span>
+          </button>
+        </div>
+        <div class="flex justify-end pt-1">
+          <a id="share-preview-link" href="#" target="_blank" class="text-xs text-blue-600 hover:underline flex items-center gap-1">
+            <span>Preview public page</span>
+            <i data-lucide="external-link" class="w-3 h-3"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/app.js"></script>
+{% endblock %}

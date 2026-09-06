@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="flex-1 flex items-center justify-center p-6 bg-[#fbfbfa]">
+  <div class="text-center max-w-md">
+    <div class="w-14 h-14 rounded-2xl bg-white border border-[#ecece9] flex items-center justify-center mx-auto mb-4 shadow-sm text-amber-500">
+      <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+        <line x1="12" y1="9" x2="12" y2="13"></line>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+      </svg>
+    </div>
+    <h1 class="text-xl font-bold text-[#37352f] tracking-tight mb-2">500 - Server Error</h1>
+    <p class="text-xs text-[#787774] leading-relaxed mb-6">
+      {{ message|default:"An unexpected internal error occurred. Please verify your MongoDB connection string and server configuration." }}
+    </p>
+    <a href="/" class="inline-flex items-center gap-1.5 px-4 py-2 bg-[#37352f] text-white hover:bg-black rounded-lg text-xs font-medium transition-colors shadow-xs">
+      <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+      <span>Reload Dashboard</span>
+    </a>
+  </div>
+</div>
+{% endblock %}
