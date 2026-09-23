@@ -57,7 +57,7 @@
     };
 </script>
 <div
-  class="flex-1 flex min-h-[calc(100vh-3.5rem)] overflow-hidden bg-white relative"
+  class="flex-1 flex   overflow-hidden bg-white relative"
 >
   <!-- Mobile Drawer Backdrop -->
   <div
@@ -66,313 +66,10 @@
     class="hidden fixed inset-0 bg-black/40 z-40 md:hidden backdrop-blur-xs transition-opacity"
   ></div>
 
-  <!-- Sidebar (Responsive drawer on mobile, static on desktop matching reference) -->
-  <aside
-    id="dashboard-sidebar"
-    class="fixed inset-y-0 left-0 z-40 w-72 max-w-[85vw] bg-[#fbfbfa] border-r border-[#ecece9] flex flex-col -translate-x-full transition-transform duration-200 md:translate-x-0 md:static md:w-64 md:z-0 shrink-0"
-  >
-    <!-- Curator Workspace Title (Matching Reference Image) -->
-    <div class="p-3.5 border-b border-[#ecece9]">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2.5">
-          <!-- Serif LV Badge -->
-          <div
-            class="w-7 h-7 rounded-md bg-[#18181b] text-white flex items-center justify-center font-serif font-bold text-xs tracking-tight shadow-xs select-none"
-          >
-            LV
-          </div>
-          <div class="flex flex-col">
-            <span
-              class="font-semibold text-xs text-[#18181b] tracking-tight leading-tight"
-              >Curator Workspace</span
-            >
-            <span class="text-[10px] text-[#9b9a97] leading-tight"
-              >Personal Knowledge Base</span
-            >
-          </div>
-        </div>
-        <div class="flex items-center gap-1">
-          <button
-            id="sidebar-add-content-btn"
-            onclick="openAddModal()"
-            class="p-1 hover:bg-[#ecece9] rounded text-[#787774] hover:text-[#18181b] transition-colors"
-            title="Quick Add"
-          >
-            <svg
-              class="w-4 h-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-          </button>
-          <button
-            onclick="toggleMobileSidebar(false)"
-            class="md:hidden p-1 hover:bg-[#ecece9] rounded text-[#787774] hover:text-[#18181b] transition-colors"
-            title="Close"
-          >
-            <svg
-              class="w-4 h-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Navigation List -->
-    <div class="flex-1 overflow-y-auto p-3 space-y-5">
-      <!-- Standard Views: KNOWLEDGE VIEWS -->
-      <div>
-        <div
-          class="text-[10px] font-bold uppercase tracking-wider text-[#9b9a97] px-2 mb-1.5"
-        >
-          KNOWLEDGE VIEWS
-        </div>
-        <nav class="space-y-0.5">
-          <!-- All Content -->
-          <button
-            onclick="filterByType(null)"
-            id="filter-all-btn"
-            class="sidebar-item w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#18181b] bg-[#efeeea]"
-          >
-            <div class="flex items-center gap-2">
-              <svg
-                class="w-4 h-4 text-[#787774]"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                <polyline points="2 17 12 22 22 17"></polyline>
-                <polyline points="2 12 12 17 22 12"></polyline>
-              </svg>
-              <span>All Content</span>
-            </div>
-            <span
-              id="badge-count-all"
-              class="text-[11px] font-mono font-medium text-[#787774]"
-              >0</span
-            >
-          </button>
-
-          <!-- YouTube -->
-          <button
-            onclick="filterByType('youtube')"
-            id="filter-youtube-btn"
-            class="sidebar-item w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#787774] hover:text-[#18181b] hover:bg-[#f0f0ef] transition-colors"
-          >
-            <div class="flex items-center gap-2">
-              <svg
-                class="w-4 h-4 text-[#787774]"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect x="2" y="4" width="20" height="16" rx="2.18"></rect>
-                <polygon points="10 8 16 12 10 16 10 8"></polygon>
-              </svg>
-              <span>YouTube</span>
-            </div>
-            <span
-              id="badge-count-youtube"
-              class="text-[11px] font-mono font-medium text-[#787774]"
-              >0</span
-            >
-          </button>
-
-          <!-- Twitter / X (Matching Reference with X logo) -->
-          <button
-            onclick="filterByType('twitter')"
-            id="filter-twitter-btn"
-            class="sidebar-item w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#787774] hover:text-[#18181b] hover:bg-[#f0f0ef] transition-colors"
-          >
-            <div class="flex items-center gap-2">
-              <!-- Official 𝕏 SVG -->
-              <svg
-                class="w-3.5 h-3.5 text-[#18181b] shrink-0"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path
-                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-                />
-              </svg>
-              <span>Twitter / X</span>
-            </div>
-            <span
-              id="badge-count-twitter"
-              class="text-[11px] font-mono font-medium text-[#787774]"
-              >0</span
-            >
-          </button>
-
-          <!-- Articles -->
-          <button
-            onclick="filterByType('article')"
-            id="filter-article-btn"
-            class="sidebar-item w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#787774] hover:text-[#18181b] hover:bg-[#f0f0ef] transition-colors"
-          >
-            <div class="flex items-center gap-2">
-              <svg
-                class="w-4 h-4 text-[#787774]"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-                ></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
-                <polyline points="10 9 9 9 8 9"></polyline>
-              </svg>
-              <span>Articles</span>
-            </div>
-            <span
-              id="badge-count-article"
-              class="text-[11px] font-mono font-medium text-[#787774]"
-              >0</span
-            >
-          </button>
-
-          <!-- Documents -->
-          <button
-            onclick="filterByType('document')"
-            id="filter-document-btn"
-            class="sidebar-item w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#787774] hover:text-[#18181b] hover:bg-[#f0f0ef] transition-colors"
-          >
-            <div class="flex items-center gap-2">
-              <svg
-                class="w-4 h-4 text-[#787774]"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"
-                ></path>
-                <path d="M6 6h10"></path>
-                <path d="M6 10h10"></path>
-              </svg>
-              <span>Documents</span>
-            </div>
-            <span
-              id="badge-count-document"
-              class="text-[11px] font-mono font-medium text-[#787774]"
-              >0</span
-            >
-          </button>
-        </nav>
-      </div>
-
-      <!-- Folders Section: FOLDERS & SPACES -->
-      <div>
-        <div class="flex items-center justify-between px-2 mb-1.5">
-          <span
-            class="text-[10px] font-bold uppercase tracking-wider text-[#9b9a97]"
-            >FOLDERS & SPACES</span
-          >
-          <button
-            onclick="openNewFolderModal()"
-            class="text-[#9b9a97] hover:text-[#18181b] p-0.5 rounded transition-colors"
-            title="Create Folder"
-          >
-            <svg
-              class="w-3.5 h-3.5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-          </button>
-        </div>
-        <div id="sidebar-folders-list" class="space-y-0.5">
-          <!-- Populated by JavaScript with colored dots and count numbers -->
-        </div>
-      </div>
-
-      <!-- Curated Tags Section: CURATED TAGS -->
-      <div>
-        <div
-          class="text-[10px] font-bold uppercase tracking-wider text-[#9b9a97] px-2 mb-2"
-        >
-          CURATED TAGS
-        </div>
-        <div id="sidebar-tags-list" class="flex flex-wrap gap-1.5 px-2">
-          <!-- Populated by JavaScript as clean #pills -->
-        </div>
-      </div>
-    </div>
-
-    <!-- Sidebar Footer: Settings and API Ref (Matching Reference Image) -->
-    <div
-      class="p-3 border-t border-[#ecece9] bg-[#fbfbfa] text-xs text-[#787774] flex items-center justify-between"
-    >
-      <button
-        onclick="openShareModal()"
-        class="hover:text-[#18181b] font-medium flex items-center gap-1.5 transition-colors"
-      >
-        <svg
-          class="w-3.5 h-3.5"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="12" cy="12" r="3"></circle>
-          <path
-            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
-          ></path>
-        </svg>
-        <span>Settings</span>
-      </button>
-
-      <a
-        href="/api-refrances/"
-        class="text-[#787774] hover:text-[#18181b] font-medium flex items-center gap-1 transition-colors text-xs"
-        title="API Reference"
-      >
-        <span>API Ref</span>
-      </a>
-    </div>
-  </aside>
+{% include "partials/sidebar.html" %}
 
   <!-- Workspace Main Content -->
-  <section class="flex-1 flex flex-col min-w-0 overflow-hidden bg-white">
+  <section class="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#fbfaf8]">
     <!-- Active Scope & Breadcrumbs Bar (Matching Reference Image) -->
     <div
       class="px-4 sm:px-8 py-3 border-b border-[#ecece9] bg-white flex flex-wrap items-center justify-between gap-3 shrink-0"
@@ -426,11 +123,11 @@
     </div>
 
     <!-- Cards Scroll Area (With pb-28 on mobile for bottom bar clearance) -->
-    <div class="flex-1 overflow-y-auto px-4 sm:px-8 py-6 pb-28 md:pb-12">
+    <div class="flex-1 overflow-y-auto px-4 sm:px-8 py-7 pb-28 md:pb-12 scrollbar-hide">
       <!-- Curated Stream Title & Subtitle (Matching Reference Image) -->
       <div class="mb-6">
         <h1
-          class="text-2xl sm:text-3xl font-serif font-medium text-[#18181b] tracking-tight"
+          class="text-3xl sm:text-[34px] font-serif font-medium text-[#18181b] tracking-tight"
         >
           Curated Stream
         </h1>
@@ -443,7 +140,7 @@
       <!-- Cards Grid Container -->
       <div
         id="content-container"
-        class="grid grid-cols-1 md:grid-cols-2 gap-4.5"
+        class="grid grid-cols-1 md:grid-cols-2 gap-5"
       >
         <!-- Content Cards dynamically populated -->
       </div>
@@ -811,7 +508,7 @@
           id="content-notes"
           rows="3"
           placeholder="Capture summary, memorable quotes, or code snippets..."
-          class="w-full px-3 py-2 text-xs border border-[#e5e5e3] focus:border-[#37352f] rounded-lg outline-none resize-none"
+          class="w-full px-3 py-2 text-xs border border-[#e5e5e3] focus:border-[#37352f] rounded-lg outline-none resize-none scrollbar-hide"
         ></textarea>
       </div>
 
@@ -1068,3 +765,5 @@
 {% endblock %} {% block scripts %}
 <script src="/static/js/app.js"></script>
 {% endblock %}
+
+

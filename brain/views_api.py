@@ -270,7 +270,10 @@ async def api_content_detail(request, item_id: str):
         data = parse_json_body(request)
         update_fields = {}
         if 'title' in data:
-            update_fields['title'] = str(data['title']).strip()
+            title = str(data['title']).strip()
+            if not title:
+                return json_error("Title is required")
+            update_fields['title'] = title
         if 'link' in data:
             update_fields['link'] = str(data['link']).strip()
         if 'type' in data:

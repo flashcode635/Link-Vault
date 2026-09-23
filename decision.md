@@ -65,3 +65,27 @@ This document records key design, UX, and architectural decisions made for the *
   2. In `app.js`, `fetchAllContent()` loads all items once, and `applyFilters()` computes the visible `appState.content` slice for rendering.
   3. `updateBadgeCounts()` now calculates category badges (YouTube, Twitter / X, Articles, Documents, and Folders) directly from `appState.allContent`.
 - **Outcome**: When switching between YouTube, Twitter / X, Articles, or Folders, all category counts remain visible, accurate, and unchanged, while the card feed displays exclusively the chosen filter.
+
+---
+
+### [2026-09-23 16:30:00 +05:30] - Complete Card Editing and Scrollable Notes UX
+
+- **Context**: The UI reference requested a reliable card edit flow and notes that can be read in full without a visible scrollbar. The existing edit controls called the correct modal/API but did not guard against stale item IDs or empty titles, and card notes were truncated with a line clamp.
+- **Decision**:
+  1. Added explicit edit/delete button types and event propagation guards, plus an actionable toast when an item is stale or missing.
+  2. Added client- and server-side title validation so an edit cannot save an empty title.
+  3. Added the `scrollbar-hide` utility and applied it to card notes and the notes textarea while retaining scrolling with a bounded note area.
+  4. Added YouTube CSS brand tokens and upgraded the sidebar and card YouTube/article icons to the requested branded/Tabler-style SVGs.
+- **Outcome**: Editing remains on the Django/PyMongo API path, invalid edits are rejected clearly, long notes remain accessible without visual scrollbar chrome, and the requested icon styling is consistent.
+
+---
+
+### [2026-09-23 16:40:00 +05:30] - Align Dashboard Shell with UI Reference
+
+- **Context**: The first pass retained an extra sidebar workspace header and used a gradient YouTube mark that did not match the supplied reference image closely enough.
+- **Decision**:
+  1. Simplified the desktop sidebar so Knowledge Views starts directly below the global header, with the quick-add button in that section heading.
+  2. Replaced the YouTube marks in the sidebar and card badges with a deterministic solid red rounded rectangle and white play triangle.
+  3. Applied a warm off-white workspace canvas, tighter reference-style spacing, a larger serif stream heading, and consistent card minimum heights.
+  4. Kept the compact Link Vault label only for the mobile drawer where a close control is needed.
+- **Outcome**: The Django dashboard now follows the provided reference hierarchy more closely while remaining clean, responsive, and easy to scan.

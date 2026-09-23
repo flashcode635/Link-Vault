@@ -33,6 +33,7 @@
 
 - **Fixed App Bottom Bar**: Mobile navigation with SVG icons for Home, Scope Filters, Quick Add, and API Reference.
 - **Touch-Friendly Modals**: Sheet modals and touch targets optimized for mobile browsers.
+- **Responsive Sidebar**: Fixed full-height overlay drawer on mobile, sticky panel below the header on desktop, with its own independently scrolling nav list.
 
 ### 6. Dedicated API Documentation Hub
 
@@ -46,9 +47,16 @@
 | :-------------------- | :---------------------------- | :---------------------------------------------------------------------------------------------------------------------------- |
 | **Backend Framework** | **Django 5.2 (ASGI)**         | Fully asynchronous request/response pipeline handling API and template rendering.                                             |
 | **Database Driver**   | **PyMongo 4.9+**              | Native `AsyncMongoClient` connecting asynchronously to MongoDB collections (`users`, `contents`, `folders`, `tags`, `links`). |
-| **Database Engine**   | **MongoDB / Motor Mock**      | Supports live MongoDB connection with an automatic fallback engine for zero-configuration testing.                            |
-| **Styling & UI**      | **Tailwind CSS & Fonts**      | Tailwind utility classes paired with _Playfair Display_ serif typography for cards and headers, with custom SVG iconography.  |
+| **Database Engine**   | **MongoDB / Motor Mock**      | Supports live MongoDB connection with an automatic fallback engine (`mongomock` / `mongomock-motor`) for zero-configuration testing. |
+| **Authentication**    | **PyJWT + bcrypt**            | JWT Bearer tokens for session auth; bcrypt for password hashing.                                                              |
+| **Styling & UI**      | **Tailwind CSS (CDN) & Fonts**| Tailwind utility classes (loaded via CDN script, no build step) paired with _Playfair Display_ serif typography, custom SVG iconography, and Lucide icons. |
 | **Client Controller** | **Vanilla ES2022 (`app.js`)** | Lightweight client-side reactive state engine managing cache, live filtering, and modal flows.                                |
+
+### Template Structure
+
+- `templates/base.html` — shared shell: `<html>`/`<body>` height chain, header, toast container, footer scripts.
+- `templates/dashboard.html` — main authenticated view; includes the sidebar partial below.
+- `templates/partials/sidebar.html` — reusable sidebar markup (folders, tags, type filters). Currently included **only** in `dashboard.html`, since its interactivity (`renderSidebarFolders`, `updateBadgeCounts`, etc.) depends on `app.js`, which is loaded only there.
 
 ---
 
@@ -60,13 +68,15 @@ All API routes are served under the `/api/v1/` prefix:
 
 - `POST /api/v1/auth/signup`: Register a new curator account (bcrypt password hashing).
 - `POST /api/v1/auth/signin`: Authenticate credentials and receive a JWT Bearer token.
+- `POST /api/v1/auth/signout`: Clear the local JWT / saved user data and the server-side HTTP-only access cookie.
 - `GET /api/v1/auth/me`: Retrieve current authenticated user profile.
 
 ### Knowledge Content
 
 - `GET /api/v1/content`: Retrieve knowledge items. Query parameters: `type`, `folder_id`, `tag`, `q` (search query).
 - `POST /api/v1/content`: Create a new knowledge item (`title`, `link`, `type`, `folder_id`, `notes`, `tags`).
-- `PUT /api/v1/content/<id>`: Update an existing item.
+- `GET /api/v1/content/<id>`: Retrieve a single knowledge item.
+- `PUT /api/v1/content/<id>` / `PATCH /api/v1/content/<id>`: Update an existing item.
 - `DELETE /api/v1/content/<id>`: Delete an item from the vault.
 
 ### Folders & Tags
@@ -80,7 +90,12 @@ All API routes are served under the `/api/v1/` prefix:
 
 - `GET /api/v1/brain/share`: Check current public sharing status and hash.
 - `POST /api/v1/brain/share`: Enable or disable public sharing.
+- `GET /api/v1/brain/public/<hash>`: Public JSON data feed for a shared vault (used by the share page).
 - `GET /share/<hash>/`: Public read-only landing page for shared vaults.
+
+### System
+
+- `GET /api/v1/health`: Health-check endpoint.
 
 ---
 
@@ -89,7 +104,7 @@ All API routes are served under the `/api/v1/` prefix:
 ### Prerequisites
 
 - Python 3.10+
-- Node.js (for asset compilation or Tailwind tooling)
+- Node.js (optional — only used to run the convenience `npm` scripts in `package.json`, which just wrap the Python/uvicorn commands; there is no separate JS build/asset-compilation step, since Tailwind is loaded via CDN)
 - MongoDB instance (optional; built-in async mock engine activates automatically if no external database is configured)
 
 ### Environment Variables
@@ -100,12 +115,18 @@ Configure the following in your environment or `.env` file:
 # Security
 DJANGO_SECRET_KEY="your-secret-key"
 DEBUG=True
-ALLOWED_HOSTS="*"
 
 # MongoDB Connection
-MONGO_URI="mongodb://localhost:27017/secondbrain"
+MONGODB_URI="mongodb://localhost:27017/secondbrain"   # primary; falls back to MONGO_URI if unset
 MONGO_DB_NAME="secondbrain"
+
+# JWT Auth
+JWT_SECRET_KEY="your-jwt-secret"
+JWT_ALGORITHM="HS256"
+JWT_EXPIRATION_HOURS=72
 ```
+
+> Note: `ALLOWED_HOSTS` is currently hardcoded to `['*']` in `secondbrain/settings.py` and is not read from the environment.
 
 ### Running the Server
 
@@ -114,5 +135,9 @@ MONGO_DB_NAME="secondbrain"
 python3 manage.py collectstatic --noinput
 
 # Start ASGI Uvicorn server on port 3000
-python3 -m uvicorn config.asgi:application --host 0.0.0.0 --port 3000
+python3 -m uvicorn config.asgi:application --host 0.0.0.0 --port 3000 
+
+# after server start for reload.
+python3 -m uvicorn config.asgi:application --host 0.0.0.0 --port 3000 --reload
+
 ```

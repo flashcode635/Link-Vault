@@ -1,0 +1,216 @@
+  <!-- Sidebar (Responsive drawer on mobile, static on desktop matching reference) -->
+  <section
+    id="dashboard-sidebar"
+    class="fixed md:sticky inset-y-0 md:inset-auto left-0 md:left-auto top-0 md:top-14 h-screen md:h-[calc(100vh-3.5rem)] z-40 md:z-0 w-72 max-w-[85vw] md:w-64 bg-[#fbfbfa] border-r border-[#ecece9] flex flex-col -translate-x-full md:translate-x-0 transition-transform duration-200 shrink-0"
+  >
+    <div class="md:hidden flex items-center justify-between px-4 py-3 border-b border-[#ecece9]">
+      <span class="text-xs font-semibold text-[#18181b]">Link Vault</span>
+      <button
+        onclick="toggleMobileSidebar(false)"
+        class="p-1 hover:bg-[#ecece9] rounded text-[#787774] hover:text-[#18181b] transition-colors"
+        title="Close"
+      >
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Navigation List -->
+    <div class="flex-1 overflow-y-auto min-h-0 p-3 pt-4 space-y-5 scrollbar-hide">
+      <!-- Standard Views: KNOWLEDGE VIEWS -->
+      <div>
+        <div class="flex items-center justify-between px-2 mb-1.5">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-[#9b9a97]">
+            KNOWLEDGE VIEWS
+          </span>
+          <button
+            id="sidebar-add-content-btn"
+            onclick="openAddModal()"
+            class="w-5 h-5 flex items-center justify-center rounded-md bg-white border border-[#ecece9] text-[#787774] hover:text-[#18181b] hover:border-[#d4d4d0] transition-colors"
+            title="Quick Add"
+          >
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+        <nav class="space-y-0.5">
+          <!-- All Content -->
+          <button
+            onclick="filterByType(null)"
+            id="filter-all-btn"
+            class="sidebar-item w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#18181b] bg-[#efeeea]"
+          >
+            <div class="flex items-center gap-2">
+              <svg
+                class="w-4 h-4 text-[#787774]"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 12 17 22 12"></polyline>
+              </svg>
+              <span>All Content</span>
+            </div>
+            <span
+              id="badge-count-all"
+              class="text-[11px] font-mono font-medium text-[#787774]"
+              >0</span
+            >
+          </button>
+
+          <!-- YouTube -->
+          <button
+            onclick="filterByType('youtube')"
+            id="filter-youtube-btn"
+            class="sidebar-item w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#787774] hover:text-[#18181b] hover:bg-[#f0f0ef] transition-colors"
+          >
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" role="img" aria-label="YouTube">
+                <rect x="2" y="4.5" width="20" height="15" rx="4" fill="#ff0000"></rect>
+                <path fill="#ffffff" d="M10 8.25v7.5L16 12z"></path>
+              </svg>
+              <span>YouTube</span>
+            </div>
+            <span
+              id="badge-count-youtube"
+              class="text-[11px] font-mono font-medium text-[#787774]"
+              >0</span
+            >
+          </button>
+
+          <!-- Twitter / X (Matching Reference with X logo) -->
+          <button
+            onclick="filterByType('twitter')"
+            id="filter-twitter-btn"
+            class="sidebar-item w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#787774] hover:text-[#18181b] hover:bg-[#f0f0ef] transition-colors"
+          >
+            <div class="flex items-center gap-2">
+              <!-- Official 𝕏 SVG -->
+              <svg
+                class="w-3.5 h-3.5 text-[#18181b] shrink-0"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                />
+              </svg>
+              <span>Twitter / X</span>
+            </div>
+            <span
+              id="badge-count-twitter"
+              class="text-[11px] font-mono font-medium text-[#787774]"
+              >0</span
+            >
+          </button>
+
+          <!-- Articles -->
+          <button
+            onclick="filterByType('article')"
+            id="filter-article-btn"
+            class="sidebar-item w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#787774] hover:text-[#18181b] hover:bg-[#f0f0ef] transition-colors"
+          >
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#787774]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M16 6h3a1 1 0 0 1 1 1v11a2 2 0 0 1-4 0v-13a1 1 0 0 0-1-1h-10a1 1 0 0 0-1 1v12a3 3 0 0 0 3 3h11"></path>
+                <path d="M8 8h4"></path>
+                <path d="M8 12h4"></path>
+                <path d="M8 16h4"></path>
+              </svg>
+              <span>Articles</span>
+            </div>
+            <span
+              id="badge-count-article"
+              class="text-[11px] font-mono font-medium text-[#787774]"
+              >0</span
+            >
+          </button>
+
+          <!-- Documents -->
+          <button
+            onclick="filterByType('document')"
+            id="filter-document-btn"
+            class="sidebar-item w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#787774] hover:text-[#18181b] hover:bg-[#f0f0ef] transition-colors"
+          >
+            <div class="flex items-center gap-2">
+              <svg
+                class="w-4 h-4 text-[#787774]"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"
+                ></path>
+                <path d="M6 6h10"></path>
+                <path d="M6 10h10"></path>
+              </svg>
+              <span>Documents</span>
+            </div>
+            <span
+              id="badge-count-document"
+              class="text-[11px] font-mono font-medium text-[#787774]"
+              >0</span
+            >
+          </button>
+        </nav>
+      </div>
+
+      <!-- Folders Section: FOLDERS & SPACES -->
+      <div>
+        <div class="flex items-center justify-between px-2 mb-1.5">
+          <span
+            class="text-[10px] font-bold uppercase tracking-wider text-[#9b9a97]"
+            >FOLDERS & SPACES</span
+          >
+          <button
+            onclick="openNewFolderModal()"
+            class="w-5 h-5 flex items-center justify-center rounded-md bg-white border border-[#ecece9] text-[#787774] hover:text-[#18181b] hover:border-[#d4d4d0] transition-colors"
+            title="Create Folder"
+          >
+            <svg
+              class="w-3.5 h-3.5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+        <div id="sidebar-folders-list" class="space-y-0.5">
+          <!-- Populated by JavaScript with colored dots and count numbers -->
+        </div>
+      </div>
+
+      <!-- Curated Tags Section: CURATED TAGS -->
+      <div>
+        <div
+          class="text-[10px] font-bold uppercase tracking-wider text-[#9b9a97] px-2 mb-2"
+        >
+          CURATED TAGS
+        </div>
+        <div id="sidebar-tags-list" class="flex flex-wrap gap-1.5 px-2">
+          <!-- Populated by JavaScript as clean #pills -->
+        </div>
+      </div>
+    </div>
+
+  
+  </section>
